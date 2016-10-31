@@ -20,14 +20,16 @@ function loadData() {
     var streetviewURL = 'http://maps.googleapis.com/maps/api/streetview?size=600x300&location=' + address + " ";
     $body.append('<img class="bgimg" src="' + streetviewURL + '">');
     // NY Times api
-    var url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?q='+ cityName + '&sort=newest&api-key=0c6372ba731e44579e05aaaa09f02b4f";
+console.log( "cityName = '%s'", cityName );
+    var url = "http://api.nytimes.com/svc/search/v2/articlesearch.json?q=" + cityName + "&begin_date=20160101&api-key=0c6372ba731e44579e05aaaa09f02b4f";
     $.getJSON(url,function(data){
+      articles = data.response.docs;
       $nytHeaderElem.text('New York Times Articles About' + " " + cityName);
       var item = [];
-      $.each( data, function( key, val ) {
-          item.push( "<li id='" + key + "'>" + val + "</li>" );
+      $.each( articles, function( key, val ) {
+          item.push( '<li class="articles">'+'<a href="'+val.web_url+'">'+val.headline.main+'</a>'+'<p>'+val.snippet+'</p>'+'</li>');
+          $nytElem.append(item);
       });
-      $nytElem.append('<li class="articles">');
   });
 
     return false;
